@@ -69,7 +69,7 @@ Vector3 Vector3::operator*(const double& factor) const {
 }
 
 Vector3 operator*(const double& factor, const Vector3& obj) {
-  return Vector3(factor * obj.x(), factor * obj.y(), factor * obj.z());
+  return obj * factor;
 }
 
 Vector3 Vector3::operator/(const Vector3& obj) const {

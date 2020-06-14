@@ -64,7 +64,7 @@ Matrix3 Matrix3::operator*(const double& factor) const {
 }
 
 Matrix3 operator*(const double& factor, const Matrix3& obj) {
-  return Matrix3(obj.row(0) * factor, obj.row(1) * factor, obj.row(2) * factor);
+  return obj * factor;
 }
 
 Matrix3 Matrix3::operator/(const Matrix3& obj) const {

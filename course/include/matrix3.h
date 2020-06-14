@@ -20,6 +20,7 @@ class Matrix3 {
   // A 3x3 one-filled matrix.
   static const Matrix3 kOnes;
 
+  Matrix3();
   Matrix3(const Vector3& row0, const Vector3& row1, const Vector3& row2);
   Matrix3(std::initializer_list<double> matrix);
 
@@ -58,10 +59,19 @@ class Matrix3 {
   const Vector3& row(int index) const;
 
   // Gets a column by its index.
-  Vector3 col(int index);
+  Vector3 col(int index) const;
 
   // Computes the determinant of the matrix.
   double det() const;
+
+  // Computes the product of two Matrix3.
+  Matrix3 Product(const Matrix3& obj) const;
+
+  // Computes the product bewteen a Matrix3 and a Vector3.
+  Vector3 Product(const Vector3& obj) const;
+
+  // Computes the product bewteen a Vector3 and a Matrix3.
+  friend Vector3 Product(const Vector3& vector, const Matrix3& matrix);
 
  private:
   // Checks that the index to access the member rows is in range.

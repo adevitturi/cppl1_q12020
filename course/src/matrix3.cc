@@ -31,6 +31,8 @@ const Matrix3 Matrix3::kIdentity = Matrix3({1, 0, 0}, {0, 1, 0}, {0, 0, 1});
 const Matrix3 Matrix3::kZero = Matrix3({0, 0, 0}, {0, 0, 0}, {0, 0, 0});
 const Matrix3 Matrix3::kOnes = Matrix3({1, 1, 1}, {1, 1, 1}, {1, 1, 1});
 
+Matrix3::Matrix3() : Matrix3(Vector3::kZero, Vector3::kZero, Vector3::kZero) {}
+
 Matrix3::Matrix3(const Vector3& row0, const Vector3& row1, const Vector3& row2)
     : rows_{row0, row1, row2} {}
 
@@ -95,7 +97,7 @@ const Vector3& Matrix3::row(int index) const {
   return rows_[index];
 }
 
-Vector3 Matrix3::col(int index) {
+Vector3 Matrix3::col(int index) const {
   return Vector3(rows_[0][index], rows_[1][index], rows_[2][index]);
 }
 
@@ -108,6 +110,32 @@ double Matrix3::det() const {
            rows_[(i + 1) % kMatrix3RowSz].z();
   }
   return det;
+}
+
+Matrix3 Matrix3::Product(const Matrix3& obj) const {
+  Matrix3 res;
+  for (auto i = 0; i < kMatrix3RowSz; ++i) {
+    for (auto j = 0; j < kMatrix3RowSz; ++j) {
+      res[i][j] = row(i).dot(obj.col(j));
+    }
+  }
+  return res;
+}
+
+Vector3 Matrix3::Product(const Vector3& obj) const {
+  Vector3 res;
+  for (auto i = 0; i < kMatrix3RowSz; ++i) {
+    res[i] = row(i).dot(obj);
+  }
+  return res;
+}
+
+Vector3 Product(const Vector3& vector, const Matrix3& matrix) {
+  Vector3 res;
+  for (auto i = 0; i < kMatrix3RowSz; ++i) {
+    res[i] = vector.dot(matrix.col(i));
+  }
+  return res;
 }
 
 // Checks that the index to access the member rows is in range.

@@ -10,8 +10,8 @@
 namespace ekumen {
 namespace math {
 namespace {
-constexpr int kMatrix3ElementSz = 9;
-constexpr int kMatrix3RowSz = 3;
+constexpr int kMatrix3ElementSize = 9;
+constexpr int kMatrix3RowSize = 3;
 
 // Returns a stringstream with the format: '[first, second, third]'.
 template <class T>
@@ -37,10 +37,10 @@ Matrix3::Matrix3(const Vector3& row0, const Vector3& row1, const Vector3& row2)
     : rows_{row0, row1, row2} {}
 
 Matrix3::Matrix3(std::initializer_list<double> matrix) {
-  if (matrix.size() != kMatrix3ElementSz) {
+  if (matrix.size() != kMatrix3ElementSize) {
     throw std::invalid_argument("Invalid matrix size.");
   }
-  for (auto i = 0; i < kMatrix3ElementSz; i += 3) {
+  for (auto i = 0; i < kMatrix3ElementSize; i += 3) {
     Vector3 row(*(matrix.begin() + i), *(matrix.begin() + i + 1),
                 *(matrix.begin() + i + 2));
     rows_.push_back(row);
@@ -103,19 +103,21 @@ Vector3 Matrix3::col(int index) const {
 
 double Matrix3::det() const {
   auto det = 0.;
-  for (auto i = 0; i < kMatrix3RowSz; ++i) {
-    det += rows_[i % kMatrix3RowSz].x() * rows_[(i + 1) % kMatrix3RowSz].y() *
-           rows_[(i + 2) % kMatrix3RowSz].z();
-    det -= rows_[i % kMatrix3RowSz].x() * rows_[(i + 2) % kMatrix3RowSz].y() *
-           rows_[(i + 1) % kMatrix3RowSz].z();
+  for (auto i = 0; i < kMatrix3RowSize; ++i) {
+    det += rows_[i % kMatrix3RowSize].x() *
+           rows_[(i + 1) % kMatrix3RowSize].y() *
+           rows_[(i + 2) % kMatrix3RowSize].z();
+    det -= rows_[i % kMatrix3RowSize].x() *
+           rows_[(i + 2) % kMatrix3RowSize].y() *
+           rows_[(i + 1) % kMatrix3RowSize].z();
   }
   return det;
 }
 
 Matrix3 Matrix3::Product(const Matrix3& obj) const {
   Matrix3 res;
-  for (auto i = 0; i < kMatrix3RowSz; ++i) {
-    for (auto j = 0; j < kMatrix3RowSz; ++j) {
+  for (auto i = 0; i < kMatrix3RowSize; ++i) {
+    for (auto j = 0; j < kMatrix3RowSize; ++j) {
       res[i][j] = row(i).dot(obj.col(j));
     }
   }
@@ -124,7 +126,7 @@ Matrix3 Matrix3::Product(const Matrix3& obj) const {
 
 Vector3 Matrix3::Product(const Vector3& obj) const {
   Vector3 res;
-  for (auto i = 0; i < kMatrix3RowSz; ++i) {
+  for (auto i = 0; i < kMatrix3RowSize; ++i) {
     res[i] = row(i).dot(obj);
   }
   return res;
@@ -132,7 +134,7 @@ Vector3 Matrix3::Product(const Vector3& obj) const {
 
 Vector3 Product(const Vector3& vector, const Matrix3& matrix) {
   Vector3 res;
-  for (auto i = 0; i < kMatrix3RowSz; ++i) {
+  for (auto i = 0; i < kMatrix3RowSize; ++i) {
     res[i] = vector.dot(matrix.col(i));
   }
   return res;

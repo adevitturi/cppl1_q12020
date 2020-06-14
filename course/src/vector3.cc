@@ -8,10 +8,7 @@ namespace ekumen {
 namespace math {
 namespace {
 constexpr double square(double x) { return x * x; }
-constexpr auto kXIndex = 0;
-constexpr auto kYIndex = 1;
-constexpr auto kZIndex = 2;
-constexpr auto kVectorSz = 3;
+constexpr auto kVectorSize = 3;
 }  // namespace
 
 const Vector3 Vector3::kUnitX = Vector3(1, 0, 0);
@@ -20,7 +17,7 @@ const Vector3 Vector3::kUnitZ = Vector3(0, 0, 1);
 const Vector3 Vector3::kZero = Vector3(0, 0, 0);
 
 Vector3::Vector3(const double& x, const double& y, const double& z)
-    : elem_{new double[kVectorSz]} {
+    : elem_{new double[kVectorSize]} {
   elem_[0] = x;
   elem_[1] = y;
   elem_[2] = z;
@@ -31,11 +28,11 @@ Vector3::Vector3(const Vector3& obj) : Vector3(obj.x(), obj.y(), obj.z()) {}
 Vector3::Vector3(Vector3&& obj) : elem_{obj.elem_} { obj.elem_ = nullptr; }
 
 Vector3::Vector3(std::initializer_list<double> vector) {
-  if (vector.size() != kVectorSz) {
+  if (vector.size() != kVectorSize) {
     throw std::invalid_argument("Invalid vector size.");
   }
-  elem_ = new double[kVectorSz];
-  for (auto i = 0; i < kVectorSz; ++i) {
+  elem_ = new double[kVectorSize];
+  for (auto i = 0; i < kVectorSize; ++i) {
     elem_[i] = vector.begin()[i];
   }
 }
@@ -43,7 +40,7 @@ Vector3::Vector3(std::initializer_list<double> vector) {
 Vector3::~Vector3() { delete[] elem_; }
 
 Vector3& Vector3::operator=(const Vector3& obj) {
-  for (auto i = 0; i < kVectorSz; ++i) {
+  for (auto i = 0; i < kVectorSize; ++i) {
     elem_[i] = obj[i];
   }
   return *this;
@@ -110,7 +107,7 @@ double Vector3::norm() const {
 
 double Vector3::dot(const Vector3& obj) const {
   double result = 0;
-  for (auto i = 0; i < kVectorSz; ++i) {
+  for (auto i = 0; i < kVectorSize; ++i) {
     result += elem_[i] * obj[i];
   }
   return result;

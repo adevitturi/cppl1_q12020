@@ -1,6 +1,5 @@
 #include "vector3.h"
 #include <cmath>
-#include <initializer_list>
 #include <iostream>
 #include <stdexcept>
 

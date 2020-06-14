@@ -1,8 +1,6 @@
 #pragma once
 
-#include <initializer_list>
 #include <iostream>
-#include <vector>
 
 namespace ekumen {
 namespace math {

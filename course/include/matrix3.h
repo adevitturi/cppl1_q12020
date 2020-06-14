@@ -6,8 +6,6 @@
 namespace ekumen {
 namespace math {
 
-// TODO(devitturi): add special member functions to this class.
-// TODO(devitturi): add a matrix-product method.
 // Represents a 3x3 matrix in the real-domain.
 class Matrix3 {
  public:
@@ -22,7 +20,12 @@ class Matrix3 {
 
   Matrix3();
   Matrix3(const Vector3& row0, const Vector3& row1, const Vector3& row2);
+  Matrix3(const Matrix3& obj);
+  Matrix3(Matrix3&& obj);
   Matrix3(std::initializer_list<double> matrix);
+
+  Matrix3& operator=(const Matrix3& obj);
+  Matrix3& operator=(Matrix3&& obj);
 
   // Member to member addition. Sums the corresponding components of two
   // matrices.

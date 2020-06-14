@@ -36,6 +36,11 @@ Matrix3::Matrix3() : Matrix3(Vector3::kZero, Vector3::kZero, Vector3::kZero) {}
 Matrix3::Matrix3(const Vector3& row0, const Vector3& row1, const Vector3& row2)
     : rows_{row0, row1, row2} {}
 
+Matrix3::Matrix3(const Matrix3& obj)
+    : Matrix3(obj.row(0), obj.row(1), obj.row(2)) {}
+
+Matrix3::Matrix3(Matrix3&& obj) : rows_(std::move(obj.rows_)) {}
+
 Matrix3::Matrix3(std::initializer_list<double> matrix) {
   if (matrix.size() != kMatrix3ElementSize) {
     throw std::invalid_argument("Invalid matrix size.");
@@ -45,6 +50,16 @@ Matrix3::Matrix3(std::initializer_list<double> matrix) {
                 *(matrix.begin() + i + 2));
     rows_.push_back(row);
   }
+}
+
+Matrix3& Matrix3::operator=(const Matrix3& obj) {
+  rows_ = obj.rows_;
+  return *this;
+}
+
+Matrix3& Matrix3::operator=(Matrix3&& obj) {
+  rows_ = std::move(obj.rows_);
+  return *this;
 }
 
 Matrix3 Matrix3::operator+(const Matrix3& obj) const {

@@ -1,5 +1,4 @@
-#ifndef MATRIX3_H
-#define MATRIX3_H
+#pragma once
 
 #include <vector>
 #include "vector3.h"
@@ -65,9 +64,11 @@ class Matrix3 {
   double det() const;
 
  private:
+  // Checks that the index to access the member rows is in range.
+  void assertValidAccessIndex(int index) const;
+
   std::vector<Vector3> rows_;
 };
 
 }  // namespace math
 }  // namespace ekumen
-#endif

@@ -28,7 +28,7 @@ GTEST_TEST(Vector3Test, Accessors) {
 }
 
 GTEST_TEST(Vector3Test, AccesorOutOfRange) {
-  ASSERT_THROW(p[5], std::invalid_argument);
+  ASSERT_THROW(p[5], std::out_of_range);
 }
 
 GTEST_TEST(Vector3Test, Operations) {

@@ -1,5 +1,4 @@
-#ifndef VECTOR3_H
-#define VECTOR3_H
+#pragma once
 
 #include <initializer_list>
 #include <iostream>
@@ -23,10 +22,16 @@ class Vector3 {
   // Zero-filled vector.
   static const Vector3 kZero;
 
-  Vector3(const double& x = 0, const double& y = 0, const double& z = 0);
+  explicit Vector3(const double& x = 0, const double& y = 0,
+                   const double& z = 0);
   Vector3(const Vector3& obj);
+  Vector3(Vector3&& obj);
   Vector3(std::initializer_list<double> vector);
+  ~Vector3();
+
   Vector3& operator=(const Vector3& obj);
+
+  Vector3& operator=(Vector3&& obj);
 
   // Member to member addition. Sums the corresponding components of two
   // vectors.
@@ -81,9 +86,11 @@ class Vector3 {
   Vector3 cross(const Vector3& obj) const;
 
  private:
-  std::vector<double> elem_;
+  // Checks that the index to access the vector components is in range.
+  void assertValidAccessIndex(int index) const;
+
+  double* elem_;
 };
 
 }  // namespace math
 }  // namespace ekumen
-#endif

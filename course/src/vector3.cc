@@ -12,14 +12,6 @@ constexpr auto kXIndex = 0;
 constexpr auto kYIndex = 1;
 constexpr auto kZIndex = 2;
 constexpr auto kVectorSz = 3;
-
-// Checks that the index to access the vector components is in range.
-void assertValidAccessIndex(int index) {
-  if (index < 0 || index > 2) {
-    throw std::invalid_argument(
-        "Index to access an element must be in range (0;2).");
-  }
-}
 }  // namespace
 
 const Vector3 Vector3::kUnitX = Vector3(1, 0, 0);
@@ -28,16 +20,27 @@ const Vector3 Vector3::kUnitZ = Vector3(0, 0, 1);
 const Vector3 Vector3::kZero = Vector3(0, 0, 0);
 
 Vector3::Vector3(const double& x, const double& y, const double& z)
-    : elem_{x, y, z} {}
+    : elem_{new double[kVectorSz]} {
+  elem_[0] = x;
+  elem_[1] = y;
+  elem_[2] = z;
+}
 
 Vector3::Vector3(const Vector3& obj) : Vector3(obj.x(), obj.y(), obj.z()) {}
+
+Vector3::Vector3(Vector3&& obj) : elem_{obj.elem_} { obj.elem_ = nullptr; }
 
 Vector3::Vector3(std::initializer_list<double> vector) {
   if (vector.size() != kVectorSz) {
     throw std::invalid_argument("Invalid vector size.");
   }
-  elem_ = vector;
+  elem_ = new double[kVectorSz];
+  for (auto i = 0; i < kVectorSz; ++i) {
+    elem_[i] = vector.begin()[i];
+  }
 }
+
+Vector3::~Vector3() { delete[] elem_; }
 
 Vector3& Vector3::operator=(const Vector3& obj) {
   for (auto i = 0; i < kVectorSz; ++i) {
@@ -46,20 +49,26 @@ Vector3& Vector3::operator=(const Vector3& obj) {
   return *this;
 }
 
+Vector3& Vector3::operator=(Vector3&& obj) {
+  elem_ = obj.elem_;
+  obj.elem_ = nullptr;
+  return *this;
+}
+
 Vector3 Vector3::operator+(const Vector3& obj) const {
-  return Vector3(elem_[0] + obj.x(), elem_[1] + obj.y(), elem_[2] + obj.z());
+  return Vector3(x() + obj.x(), y() + obj.y(), z() + obj.z());
 }
 
 Vector3 Vector3::operator-(const Vector3& obj) const {
-  return Vector3(elem_[0] - obj.x(), elem_[1] - obj.y(), elem_[2] - obj.z());
+  return Vector3(x() - obj.x(), y() - obj.y(), z() - obj.z());
 }
 
 Vector3 Vector3::operator*(const Vector3& obj) const {
-  return Vector3(elem_[0] * obj.x(), elem_[1] * obj.y(), elem_[2] * obj.z());
+  return Vector3(x() * obj.x(), y() * obj.y(), z() * obj.z());
 }
 
 Vector3 Vector3::operator*(const double& factor) const {
-  return Vector3(elem_[0] * factor, elem_[1] * factor, elem_[2] * factor);
+  return Vector3(x() * factor, y() * factor, z() * factor);
 }
 
 Vector3 operator*(const double& factor, const Vector3& obj) {
@@ -67,15 +76,15 @@ Vector3 operator*(const double& factor, const Vector3& obj) {
 }
 
 Vector3 Vector3::operator/(const Vector3& obj) const {
-  return Vector3(elem_[0] / obj.x(), elem_[1] / obj.y(), elem_[2] / obj.z());
+  return Vector3(x() / obj.x(), y() / obj.y(), z() / obj.z());
 }
 
 Vector3 Vector3::operator/(const double& factor) const {
-  return Vector3(elem_[0] / factor, elem_[1] / factor, elem_[2] / factor);
+  return Vector3(x() / factor, y() / factor, z() / factor);
 }
 
 bool Vector3::operator==(const Vector3& rhs) const {
-  return (elem_[0] == rhs.x() && elem_[1] == rhs.y() && elem_[2] == rhs.z());
+  return (x() == rhs.x() && y() == rhs.y() && z() == rhs.z());
 }
 
 bool Vector3::operator!=(const Vector3& rhs) const { return !(*this == rhs); }
@@ -96,7 +105,7 @@ std::ostream& operator<<(std::ostream& os, const Vector3& obj) {
 }
 
 double Vector3::norm() const {
-  return std::sqrt(square(elem_[0]) + square(elem_[1]) + square(elem_[2]));
+  return std::sqrt(square(x()) + square(y()) + square(z()));
 }
 
 double Vector3::dot(const Vector3& obj) const {
@@ -131,6 +140,13 @@ const double& Vector3::z() const { return elem_[2]; }
 // Try avoiding using this. This is error-prone as it can have two
 // responsibilities as getter or setter.
 double& Vector3::z() { return elem_[2]; }
+
+void Vector3::assertValidAccessIndex(int index) const {
+  if (index < 0 || index > 2) {
+    throw std::out_of_range(
+        "Index to access an element must be in range (0;2).");
+  }
+}
 
 }  // namespace math
 }  // namespace ekumen

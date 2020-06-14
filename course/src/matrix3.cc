@@ -25,14 +25,6 @@ std::ostringstream formatStr(const T& first, const T& second, const T& third) {
 std::string formatRow(const Vector3& obj) {
   return formatStr<double>(obj.x(), obj.y(), obj.z()).str();
 }
-
-// Checks that the index to access the member rows is in range.
-void assertValidAccessIndex(int index) {
-  if (index < 0 || index > 2) {
-    throw std::invalid_argument(
-        "Index to access a row must be in range (0;2).");
-  }
-}
 }  // namespace
 
 const Matrix3 Matrix3::kIdentity = Matrix3({1, 0, 0}, {0, 1, 0}, {0, 0, 1});
@@ -54,22 +46,19 @@ Matrix3::Matrix3(std::initializer_list<double> matrix) {
 }
 
 Matrix3 Matrix3::operator+(const Matrix3& obj) const {
-  return Matrix3(rows_[0] + obj.row(0), rows_[1] + obj.row(1),
-                 rows_[2] + obj.row(2));
+  return Matrix3(row(0) + obj.row(0), row(1) + obj.row(1), row(2) + obj.row(2));
 }
 
 Matrix3 Matrix3::operator-(const Matrix3& obj) const {
-  return Matrix3(rows_[0] - obj.row(0), rows_[1] - obj.row(1),
-                 rows_[2] - obj.row(2));
+  return Matrix3(row(0) - obj.row(0), row(1) - obj.row(1), row(2) - obj.row(2));
 }
 
 Matrix3 Matrix3::operator*(const Matrix3& obj) const {
-  return Matrix3(rows_[0] * obj.row(0), rows_[1] * obj.row(1),
-                 rows_[2] * obj.row(2));
+  return Matrix3(row(0) * obj.row(0), row(1) * obj.row(1), row(2) * obj.row(2));
 }
 
 Matrix3 Matrix3::operator*(const double& factor) const {
-  return Matrix3(rows_[0] * factor, rows_[1] * factor, rows_[2] * factor);
+  return Matrix3(row(0) * factor, row(1) * factor, row(2) * factor);
 }
 
 Matrix3 operator*(const double& factor, const Matrix3& obj) {
@@ -77,13 +66,11 @@ Matrix3 operator*(const double& factor, const Matrix3& obj) {
 }
 
 Matrix3 Matrix3::operator/(const Matrix3& obj) const {
-  return Matrix3(rows_[0] / obj.row(0), rows_[1] / obj.row(1),
-                 rows_[2] / obj.row(2));
+  return Matrix3(row(0) / obj.row(0), row(1) / obj.row(1), row(2) / obj.row(2));
 }
 
 bool Matrix3::operator==(const Matrix3& rhs) const {
-  return (rows_[0] == rhs.row(0) && rows_[1] == rhs.row(1) &&
-          rows_[2] == rhs.row(2));
+  return (row(0) == rhs.row(0) && row(1) == rhs.row(1) && row(2) == rhs.row(2));
 }
 
 const Vector3& Matrix3::operator[](int index) const {
@@ -121,6 +108,13 @@ double Matrix3::det() const {
            rows_[(i + 1) % kMatrix3RowSz].z();
   }
   return det;
+}
+
+// Checks that the index to access the member rows is in range.
+void Matrix3::assertValidAccessIndex(int index) const {
+  if (index < 0 || index > 2) {
+    throw std::out_of_range("Index to access a row must be in range (0;2).");
+  }
 }
 }  // namespace math
 }  // namespace ekumen

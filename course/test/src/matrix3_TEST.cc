@@ -48,9 +48,9 @@ GTEST_TEST(Matrix3Test, Accessors) {
 }
 
 GTEST_TEST(Matrix3Test, AccesorOutOfRange) {
-  ASSERT_THROW(m2.row(5), std::invalid_argument);
-  ASSERT_THROW(m2.row(6), std::invalid_argument);
-  ASSERT_THROW(m2.col(8), std::invalid_argument);
+  ASSERT_THROW(m2.row(5), std::out_of_range);
+  ASSERT_THROW(m2.row(6), std::out_of_range);
+  ASSERT_THROW(m2.col(8), std::out_of_range);
 }
 
 GTEST_TEST(Matrix3Test, Operations) {

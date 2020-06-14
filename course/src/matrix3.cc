@@ -124,15 +124,15 @@ Matrix3 Matrix3::Product(const Matrix3& obj) const {
   return res;
 }
 
-Vector3 Matrix3::Product(const Vector3& obj) const {
+Vector3 Matrix3::Product(const Matrix3& matrix, const Vector3& vector) {
   Vector3 res;
   for (auto i = 0; i < kMatrix3RowSize; ++i) {
-    res[i] = row(i).dot(obj);
+    res[i] = matrix.row(i).dot(vector);
   }
   return res;
 }
 
-Vector3 Product(const Vector3& vector, const Matrix3& matrix) {
+Vector3 Matrix3::Product(const Vector3& vector, const Matrix3& matrix) {
   Vector3 res;
   for (auto i = 0; i < kMatrix3RowSize; ++i) {
     res[i] = vector.dot(matrix.col(i));

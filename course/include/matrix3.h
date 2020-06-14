@@ -68,10 +68,10 @@ class Matrix3 {
   Matrix3 Product(const Matrix3& obj) const;
 
   // Computes the product bewteen a Matrix3 and a Vector3.
-  Vector3 Product(const Vector3& obj) const;
+  static Vector3 Product(const Matrix3& matrix, const Vector3& vector);
 
   // Computes the product bewteen a Vector3 and a Matrix3.
-  friend Vector3 Product(const Vector3& vector, const Matrix3& matrix);
+  static Vector3 Product(const Vector3& vector, const Matrix3& matrix);
 
  private:
   // Checks that the index to access the member rows is in range.

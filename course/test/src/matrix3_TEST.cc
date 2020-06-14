@@ -70,6 +70,21 @@ GTEST_TEST(Matrix3Test, Serialize) {
   EXPECT_EQ(ss.str(), "[[1, 0, 0], [0, 1, 0], [0, 0, 1]]");
 }
 
+GTEST_TEST(Matrix3Test, MatrixProduct) {
+  Matrix3 m3 = m1.Product(m2);
+  EXPECT_EQ(m3, Matrix3({30, 36, 42, 66, 81, 96, 102, 126, 150}));
+  Matrix3 m4 = m1.Product(Matrix3::kIdentity);
+  EXPECT_EQ(m4, m1);
+}
+
+GTEST_TEST(Matrix3Test, MatrixVectorProduct) {
+  Vector3 v1 = Matrix3::Product(m1, Vector3{0, 1, 2});
+  EXPECT_EQ(v1, Vector3(8, 17, 26));
+
+  Vector3 v2 = Matrix3::Product(Vector3{0, 1, 2}, m1);
+  EXPECT_EQ(v2, Vector3(18, 21, 24));
+}
+
 GTEST_TEST(Matrix3Test, Determinant) {
   EXPECT_NEAR(m1.det(), 0., kTolerance);
   m1[2][2] = 10.;

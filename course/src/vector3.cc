@@ -7,7 +7,6 @@
 namespace ekumen {
 namespace math {
 namespace {
-constexpr double square(double x) { return x * x; }
 constexpr auto kVectorSize = 3;
 }  // namespace
 
@@ -104,9 +103,7 @@ std::ostream& operator<<(std::ostream& os, const Vector3& obj) {
   return os;
 }
 
-double Vector3::norm() const {
-  return std::sqrt(square(x()) + square(y()) + square(z()));
-}
+double Vector3::norm() const { return std::sqrt(dot(*this)); }
 
 double Vector3::dot(const Vector3& obj) const {
   double result = 0;

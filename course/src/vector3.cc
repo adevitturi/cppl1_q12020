@@ -2,6 +2,7 @@
 #include <cmath>
 #include <iostream>
 #include <stdexcept>
+#include "double_util.h"
 
 namespace ekumen {
 namespace math {
@@ -14,6 +15,7 @@ const Vector3 Vector3::kUnitX = Vector3(1, 0, 0);
 const Vector3 Vector3::kUnitY = Vector3(0, 1, 0);
 const Vector3 Vector3::kUnitZ = Vector3(0, 0, 1);
 const Vector3 Vector3::kZero = Vector3(0, 0, 0);
+const int Vector3::kComparisonUlps = 5;
 
 Vector3::Vector3(const double& x, const double& y, const double& z)
     : elem_{new double[kVectorSize]} {
@@ -80,7 +82,9 @@ Vector3 Vector3::operator/(const double& factor) const {
 }
 
 bool Vector3::operator==(const Vector3& rhs) const {
-  return (x() == rhs.x() && y() == rhs.y() && z() == rhs.z());
+  return (DoubleUtil::compare(x(), rhs.x(), Vector3::kComparisonUlps) &&
+          DoubleUtil::compare(y(), rhs.y(), Vector3::kComparisonUlps) &&
+          DoubleUtil::compare(z(), rhs.z(), Vector3::kComparisonUlps));
 }
 
 bool Vector3::operator!=(const Vector3& rhs) const { return !(*this == rhs); }

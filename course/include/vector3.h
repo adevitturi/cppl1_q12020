@@ -20,6 +20,9 @@ class Vector3 {
   // Zero-filled vector.
   static const Vector3 kZero;
 
+  // Comparison precision in units in the last place.
+  static const int kComparisonUlps;
+
   explicit Vector3(const double& x = 0, const double& y = 0,
                    const double& z = 0);
   Vector3(const Vector3& obj);

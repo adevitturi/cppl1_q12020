@@ -80,6 +80,8 @@ class Matrix3 {
   // Checks that the index to access the member rows is in range.
   void assertValidAccessIndex(int index) const;
 
+  static const int comparison_ulps = 5;
+
   std::vector<Vector3> rows_;
 };
 

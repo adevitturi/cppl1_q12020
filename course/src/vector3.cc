@@ -47,6 +47,13 @@ Vector3& Vector3::operator=(const Vector3& obj) {
 }
 
 Vector3& Vector3::operator=(Vector3&& obj) {
+  // The rvalue reference shouldn't be the same as this.
+  if (this == &obj) {
+    throw std::invalid_argument(
+        "rvalue cannot be identity of lvalue in move assignment.");
+  }
+
+  delete[] elem_;
   elem_ = obj.elem_;
   obj.elem_ = nullptr;
   return *this;
@@ -141,7 +148,7 @@ double& Vector3::z() { return elem_[2]; }
 void Vector3::assertValidAccessIndex(int index) const {
   if (index < 0 || index > 2) {
     throw std::out_of_range(
-        "Index to access an element must be in range (0;2).");
+        "Index to access an element must be in range [0;2].");
   }
 }
 

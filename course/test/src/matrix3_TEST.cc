@@ -47,6 +47,11 @@ GTEST_TEST(Matrix3Test, Accessors) {
   }
 }
 
+GTEST_TEST(Matrix3Test, MoveAssignment) {
+  Matrix3 m3;
+  ASSERT_THROW(m3 = std::move(m3), std::invalid_argument);
+}
+
 GTEST_TEST(Matrix3Test, AccesorOutOfRange) {
   ASSERT_THROW(m2.row(5), std::out_of_range);
   ASSERT_THROW(m2.row(6), std::out_of_range);
@@ -71,18 +76,15 @@ GTEST_TEST(Matrix3Test, Serialize) {
 }
 
 GTEST_TEST(Matrix3Test, MatrixProduct) {
-  Matrix3 m3 = m1.Product(m2);
+  Matrix3 m3 = m1.product(m2);
   EXPECT_EQ(m3, Matrix3({30, 36, 42, 66, 81, 96, 102, 126, 150}));
-  Matrix3 m4 = m1.Product(Matrix3::kIdentity);
+  Matrix3 m4 = m1.product(Matrix3::kIdentity);
   EXPECT_EQ(m4, m1);
 }
 
 GTEST_TEST(Matrix3Test, MatrixVectorProduct) {
-  Vector3 v1 = Matrix3::Product(m1, Vector3{0, 1, 2});
+  Vector3 v1 = m1.product(Vector3{0, 1, 2});
   EXPECT_EQ(v1, Vector3(8, 17, 26));
-
-  Vector3 v2 = Matrix3::Product(Vector3{0, 1, 2}, m1);
-  EXPECT_EQ(v2, Vector3(18, 21, 24));
 }
 
 GTEST_TEST(Matrix3Test, Determinant) {

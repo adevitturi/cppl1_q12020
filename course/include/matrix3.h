@@ -68,13 +68,10 @@ class Matrix3 {
   double det() const;
 
   // Computes the product of two Matrix3.
-  Matrix3 Product(const Matrix3& obj) const;
+  Matrix3 product(const Matrix3& obj) const;
 
   // Computes the product bewteen a Matrix3 and a Vector3.
-  static Vector3 Product(const Matrix3& matrix, const Vector3& vector);
-
-  // Computes the product bewteen a Vector3 and a Matrix3.
-  static Vector3 Product(const Vector3& vector, const Matrix3& matrix);
+  Vector3 product(const Vector3& vector) const;
 
  private:
   // Checks that the index to access the member rows is in range.

@@ -58,6 +58,12 @@ Matrix3& Matrix3::operator=(const Matrix3& obj) {
 }
 
 Matrix3& Matrix3::operator=(Matrix3&& obj) {
+  // The rvalue reference shouldn't be the same as this.
+  if (this == &obj) {
+    throw std::invalid_argument(
+        "rvalue cannot be identity of lvalue in move assignment.");
+  }
+
   rows_ = std::move(obj.rows_);
   return *this;
 }
@@ -129,28 +135,21 @@ double Matrix3::det() const {
   return det;
 }
 
-Matrix3 Matrix3::Product(const Matrix3& obj) const {
+Matrix3 Matrix3::product(const Matrix3& obj) const {
+  Matrix3 objTranspose(obj.col(0), obj.col(1), obj.col(2));
   Matrix3 res;
   for (auto i = 0; i < kMatrix3RowSize; ++i) {
     for (auto j = 0; j < kMatrix3RowSize; ++j) {
-      res[i][j] = row(i).dot(obj.col(j));
+      res[i][j] = row(i).dot(objTranspose.row(j));
     }
   }
   return res;
 }
 
-Vector3 Matrix3::Product(const Matrix3& matrix, const Vector3& vector) {
+Vector3 Matrix3::product(const Vector3& vector) const {
   Vector3 res;
   for (auto i = 0; i < kMatrix3RowSize; ++i) {
-    res[i] = matrix.row(i).dot(vector);
-  }
-  return res;
-}
-
-Vector3 Matrix3::Product(const Vector3& vector, const Matrix3& matrix) {
-  Vector3 res;
-  for (auto i = 0; i < kMatrix3RowSize; ++i) {
-    res[i] = vector.dot(matrix.col(i));
+    res[i] = row(i).dot(vector);
   }
   return res;
 }
@@ -158,7 +157,7 @@ Vector3 Matrix3::Product(const Vector3& vector, const Matrix3& matrix) {
 // Checks that the index to access the member rows is in range.
 void Matrix3::assertValidAccessIndex(int index) const {
   if (index < 0 || index > 2) {
-    throw std::out_of_range("Index to access a row must be in range (0;2).");
+    throw std::out_of_range("Index to access a row must be in range [0;2].");
   }
 }
 }  // namespace math

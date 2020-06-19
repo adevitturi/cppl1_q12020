@@ -39,13 +39,13 @@ macro (cppcourse_build_tests)
     add_executable(${BINARY_NAME} ${GTEST_SOURCE_file})
 
     add_dependencies(${BINARY_NAME}
-    	foo
+    	isometry
     	gtest
     	gtest_main
     )
 
     target_link_libraries(${BINARY_NAME}
-    	foo
+    	isometry
     )
 
     target_link_libraries(${BINARY_NAME}

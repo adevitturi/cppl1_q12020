@@ -15,11 +15,13 @@ include_directories(
 
 # Library sources.
 set(LIBRARY_SOURCES
-	src/foo.cc
+	src/vector3.cc
+	src/matrix3.cc
+	src/double_util.cc
 )
 
 # Library creation.
-add_library(foo ${LIBRARY_SOURCES})
+add_library(isometry ${LIBRARY_SOURCES})
 
 # Application sources.
 set(APP_SOURCES
@@ -28,7 +30,7 @@ set(APP_SOURCES
 
 # Application creation and linkeage to libraries.
 add_executable(cpp_course ${APP_SOURCES})
-target_link_libraries(cpp_course foo)
+target_link_libraries(cpp_course isometry)
 
 # Includes GTest.
 enable_testing()

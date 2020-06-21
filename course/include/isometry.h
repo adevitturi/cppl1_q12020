@@ -7,13 +7,17 @@
 namespace ekumen {
 namespace math {
 
-// TODO(devitturi): add special member functions to this class.
 // Represents an Homogeneous matrix to perform isometry transformations.
 class Isometry {
  public:
   explicit Isometry(const Vector3& translation = Vector3::kZero,
                     const Matrix3& rotation = Matrix3::kIdentity);
   explicit Isometry(const Matrix3& rotation);
+  Isometry(const Isometry& obj);
+  Isometry(Isometry&& obj);
+
+  Isometry& operator=(const Isometry& obj);
+  Isometry& operator=(Isometry&& obj);
 
   // Returns an isometry transformation from a pure translation.
   static Isometry FromTranslation(const Vector3& translation);

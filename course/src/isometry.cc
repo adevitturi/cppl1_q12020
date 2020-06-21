@@ -13,6 +13,30 @@ Isometry::Isometry(const Vector3& translation, const Matrix3& rotation)
 Isometry::Isometry(const Matrix3& rotation)
     : translation_(Vector3::kZero), rotation_(rotation) {}
 
+Isometry::Isometry(const Isometry& obj)
+    : Isometry(obj.translation_, obj.rotation_) {}
+
+Isometry::Isometry(Isometry&& obj)
+    : translation_(std::move(obj.translation_)),
+      rotation_(std::move(obj.rotation_)) {}
+
+Isometry& Isometry::operator=(const Isometry& obj) {
+  translation_ = obj.translation_;
+  rotation_ = obj.rotation_;
+  return *this;
+}
+Isometry& Isometry::operator=(Isometry&& obj) {
+  // The rvalue reference shouldn't be the same as this.
+  if (this == &obj) {
+    throw std::invalid_argument(
+        "rvalue cannot be identity of lvalue in move assignment.");
+  }
+
+  translation_ = std::move(obj.translation_);
+  rotation_ = std::move(obj.rotation_);
+  return *this;
+}
+
 Isometry Isometry::FromTranslation(const Vector3& translation) {
   return Isometry(translation);
 }

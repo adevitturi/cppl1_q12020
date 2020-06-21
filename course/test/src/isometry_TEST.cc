@@ -2,14 +2,12 @@
 // of this unit test is to suggest an API and the abstractions
 // needed to implement an isometry.
 
-// Consider including other header files if needed.
 #include "isometry.h"
 #include "matrix3.h"
 #include "vector3.h"
 
 #include <cmath>
-// #include <sstream>
-// #include <string>
+#include <sstream>
 
 #include "gtest/gtest.h"
 

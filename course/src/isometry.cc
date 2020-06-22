@@ -5,7 +5,9 @@
 
 namespace ekumen {
 namespace math {
-namespace {}  // namespace
+namespace {
+constexpr int kMatrix3RowSize = 3;
+}  // namespace.
 
 Isometry::Isometry(const Vector3& translation, const Matrix3& rotation)
     : translation_(translation), rotation_(rotation) {}
@@ -26,10 +28,8 @@ Isometry& Isometry::operator=(const Isometry& obj) {
   return *this;
 }
 Isometry& Isometry::operator=(Isometry&& obj) {
-  // The rvalue reference shouldn't be the same as this.
   if (this == &obj) {
-    throw std::invalid_argument(
-        "rvalue cannot be identity of lvalue in move assignment.");
+    return *this;
   }
 
   translation_ = std::move(obj.translation_);
@@ -42,55 +42,52 @@ Isometry Isometry::FromTranslation(const Vector3& translation) {
 }
 
 Isometry Isometry::RotateAround(const Vector3& axis, const double& angle) {
-  Matrix3 res(Matrix3::kIdentity);
-  double cosAngle = std::cos(angle);
-  double sinAngle = std::sin(angle);
-  if (axis == Vector3::kUnitX) {
-    res[1][1] = cosAngle;
-    res[1][2] = -1 * sinAngle;
-    res[2][1] = sinAngle;
-    res[2][2] = cosAngle;
-  } else if (axis == Vector3::kUnitY) {
-    res[0][0] = cosAngle;
-    res[0][2] = sinAngle;
-    res[2][0] = -1 * sinAngle;
-    res[2][2] = cosAngle;
-  } else if (axis == Vector3::kUnitZ) {
-    res[0][0] = cosAngle;
-    res[0][1] = -1 * sinAngle;
-    res[1][0] = sinAngle;
-    res[1][1] = cosAngle;
+  Matrix3 res;
+  Vector3 axis_norm;
+
+  if (axis.norm() != 1) {
+    axis_norm = axis / axis.norm();
   } else {
-    throw std::invalid_argument(
-        "Axis to rotate around should be a unitary versor.");
+    axis_norm = axis;
   }
+  const double cos_angle = std::cos(angle);
+  const double sin_angle = std::sin(angle);
+  const double cos_complement = 1 - cos_angle;
+  const double x = axis_norm.x();
+  const double y = axis_norm.y();
+  const double z = axis_norm.z();
+
+  res[0][0] = x * x * cos_complement + cos_angle;
+  res[0][1] = x * y * cos_complement - z * sin_angle;
+  res[0][2] = x * z * cos_complement + y * sin_angle;
+
+  res[1][0] = y * x * cos_complement + z * sin_angle;
+  res[1][1] = y * y * cos_complement + cos_angle;
+  res[1][2] = y * z * cos_complement - x * sin_angle;
+
+  res[2][0] = z * x * cos_complement - y * sin_angle;
+  res[2][1] = z * y * cos_complement + x * sin_angle;
+  res[2][2] = z * z * cos_complement + cos_angle;
+
   return Isometry(res);
 }
 
 Isometry Isometry::FromEulerAngles(const double& psi, const double& theta,
                                    const double& phi) {
-  Isometry psi_rotation = Isometry::RotateAround(Vector3::kUnitX, psi);
-  Isometry theta_rotation = Isometry::RotateAround(Vector3::kUnitY, theta);
-  Isometry phi_rotation = Isometry::RotateAround(Vector3::kUnitZ, phi);
+  const Isometry psi_rotation = Isometry::RotateAround(Vector3::kUnitX, psi);
+  const Isometry theta_rotation =
+      Isometry::RotateAround(Vector3::kUnitY, theta);
+  const Isometry phi_rotation = Isometry::RotateAround(Vector3::kUnitZ, phi);
   return psi_rotation * theta_rotation * phi_rotation;
 }
 
-Matrix3 Isometry::rotation() const { return rotation_; }
-Vector3 Isometry::translation() const { return translation_; }
+const Matrix3& Isometry::rotation() const { return rotation_; }
+const Vector3& Isometry::translation() const { return translation_; }
 
 Isometry Isometry::operator*(const Isometry& obj) const {
-  double res_translation_x =
-      rotation_.row(0).dot(obj.translation_) + translation_.x();
-  double res_translation_y =
-      rotation_.row(1).dot(obj.translation_) + translation_.y();
-  double res_translation_z =
-      rotation_.row(2).dot(obj.translation_) + translation_.z();
-
-  Vector3 res_translation(res_translation_x, res_translation_y,
-                          res_translation_z);
-
-  Matrix3 res_rotation = rotation_.product(obj.rotation_);
-
+  const Vector3 res_translation =
+      rotation_.product(obj.translation_) + translation_;
+  const Matrix3 res_rotation = rotation_.product(obj.rotation_);
   return Isometry(res_translation, res_rotation);
 }
 
@@ -115,7 +112,7 @@ Vector3 Isometry::transform(const Vector3& obj) const { return *this * obj; }
 Isometry Isometry::compose(const Isometry& obj) const { return *this * obj; }
 
 Isometry Isometry::inverse() const {
-  Matrix3 inverse_rotation = rotation_.inverse();
+  const Matrix3 inverse_rotation = rotation_.inverse();
   return Isometry(inverse_rotation.product(translation_) * (-1),
                   inverse_rotation);
 }

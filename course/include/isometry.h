@@ -1,5 +1,4 @@
-#ifndef ISOMETRY_H
-#define ISOMETRY_H
+#pragma once
 
 #include "matrix3.h"
 #include "vector3.h"
@@ -31,10 +30,10 @@ class Isometry {
                                   const double& phi);
 
   // Gets the rotation matrix.
-  Matrix3 rotation() const;
+  const Matrix3& rotation() const;
 
   // Gets the translation vector.
-  Vector3 translation() const;
+  const Vector3& translation() const;
 
   // Composes two isometry transformations.
   Isometry operator*(const Isometry& obj) const;
@@ -70,4 +69,3 @@ class Isometry {
 
 }  // namespace math
 }  // namespace ekumen
-#endif

@@ -60,10 +60,8 @@ Matrix3& Matrix3::operator=(const Matrix3& obj) {
 }
 
 Matrix3& Matrix3::operator=(Matrix3&& obj) {
-  // The rvalue reference shouldn't be the same as this.
   if (this == &obj) {
-    throw std::invalid_argument(
-        "rvalue cannot be identity of lvalue in move assignment.");
+    return *this;
   }
 
   rows_ = std::move(obj.rows_);

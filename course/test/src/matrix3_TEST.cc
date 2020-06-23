@@ -47,11 +47,6 @@ GTEST_TEST(Matrix3Test, Accessors) {
   }
 }
 
-GTEST_TEST(Matrix3Test, MoveAssignment) {
-  Matrix3 m3;
-  ASSERT_THROW(m3 = std::move(m3), std::invalid_argument);
-}
-
 GTEST_TEST(Matrix3Test, AccesorOutOfRange) {
   ASSERT_THROW(m2.row(5), std::out_of_range);
   ASSERT_THROW(m2.row(6), std::out_of_range);

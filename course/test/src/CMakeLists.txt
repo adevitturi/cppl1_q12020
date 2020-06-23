@@ -7,6 +7,7 @@ include_directories(
 set (GTEST_SOURCES
 	vector3_TEST.cc
 	matrix3_TEST.cc
+	isometry_TEST.cc
 )
 
 cppcourse_build_tests(${GTEST_SOURCES})

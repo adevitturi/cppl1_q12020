@@ -2,6 +2,7 @@
 #include "vector3.h"
 
 #include <initializer_list>
+#include <iomanip>
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
@@ -17,7 +18,8 @@ constexpr int kMatrix3RowSize = 3;
 template <class T>
 std::ostringstream formatStr(const T& first, const T& second, const T& third) {
   std::ostringstream oss;
-  oss << "[" << first << ", " << second << ", " << third << "]";
+  oss << std::setprecision(9) << "[" << first << ", " << second << ", " << third
+      << "]";
   return oss;
 }
 
@@ -58,10 +60,8 @@ Matrix3& Matrix3::operator=(const Matrix3& obj) {
 }
 
 Matrix3& Matrix3::operator=(Matrix3&& obj) {
-  // The rvalue reference shouldn't be the same as this.
   if (this == &obj) {
-    throw std::invalid_argument(
-        "rvalue cannot be identity of lvalue in move assignment.");
+    return *this;
   }
 
   rows_ = std::move(obj.rows_);
@@ -154,7 +154,20 @@ Vector3 Matrix3::product(const Vector3& vector) const {
   return res;
 }
 
-// Checks that the index to access the member rows is in range.
+Matrix3 Matrix3::inverse() const {
+  double factor = 1 / det();
+  Vector3 row1(rows_[1][1] * rows_[2][2] - rows_[2][1] * rows_[1][2],
+               rows_[0][2] * rows_[2][1] - rows_[2][2] * rows_[0][1],
+               rows_[0][1] * rows_[1][2] - rows_[1][1] * rows_[0][2]);
+  Vector3 row2(rows_[1][2] * rows_[2][0] - rows_[2][2] * rows_[1][0],
+               rows_[0][0] * rows_[2][2] - rows_[2][0] * rows_[0][2],
+               rows_[0][2] * rows_[1][0] - rows_[1][2] * rows_[0][0]);
+  Vector3 row3(rows_[1][0] * rows_[2][1] - rows_[2][0] * rows_[1][1],
+               rows_[0][1] * rows_[2][0] - rows_[2][1] * rows_[0][0],
+               rows_[0][0] * rows_[1][1] - rows_[1][0] * rows_[0][1]);
+  return Matrix3(row1, row2, row3) * factor;
+}
+
 void Matrix3::assertValidAccessIndex(int index) const {
   if (index < 0 || index > 2) {
     throw std::out_of_range("Index to access a row must be in range [0;2].");

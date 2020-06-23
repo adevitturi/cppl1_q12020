@@ -27,11 +27,6 @@ GTEST_TEST(Vector3Test, Accessors) {
   EXPECT_EQ(t, p);
 }
 
-GTEST_TEST(Vector3Test, MoveAssignment) {
-  Vector3 v;
-  ASSERT_THROW(v = std::move(v), std::invalid_argument);
-}
-
 GTEST_TEST(Vector3Test, AccesorOutOfRange) {
   ASSERT_THROW(p[5], std::out_of_range);
 }

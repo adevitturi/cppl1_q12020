@@ -73,6 +73,9 @@ class Matrix3 {
   // Computes the product bewteen a Matrix3 and a Vector3.
   Vector3 product(const Vector3& vector) const;
 
+  // Computes the inverse of a Matrix3.
+  Matrix3 inverse() const;
+
  private:
   // Checks that the index to access the member rows is in range.
   void assertValidAccessIndex(int index) const;

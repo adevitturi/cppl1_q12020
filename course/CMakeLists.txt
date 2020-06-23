@@ -17,6 +17,7 @@ include_directories(
 set(LIBRARY_SOURCES
 	src/vector3.cc
 	src/matrix3.cc
+	src/isometry.cc
 	src/double_util.cc
 )
 

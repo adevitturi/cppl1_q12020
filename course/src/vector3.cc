@@ -47,10 +47,8 @@ Vector3& Vector3::operator=(const Vector3& obj) {
 }
 
 Vector3& Vector3::operator=(Vector3&& obj) {
-  // The rvalue reference shouldn't be the same as this.
   if (this == &obj) {
-    throw std::invalid_argument(
-        "rvalue cannot be identity of lvalue in move assignment.");
+    return *this;
   }
 
   delete[] elem_;
